@@ -1,0 +1,537 @@
+---
+title: "Black Box Methods"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Neural Networks and Support Vector Machines
+
+In engineering, these are referred to as **black box** processes because the mechanism
+that transforms the input into the output is obfuscated by an imaginary box. For
+instance, the black box of closed-source software intentionally conceals proprietary
+algorithms, the black box of political lawmaking is rooted in the bureaucratic
+processes, and the black box of sausage-making involves a bit of purposeful (but
+tasty) ignorance. In the case of machine learning, the black box is due to the complex
+mathematics allowing them to function.
+Although they may not be easy to understand, it is dangerous to apply black box
+models blindly. Thus, in this chapter, we'll peek inside the box and investigate
+the statistical sausage-making involved in fitting such models. You'll discover:
+
+ * Neural networks mimic the structure of animal brains to model
+arbitrary functions
+ * Support vector machines use multidimensional surfaces to define the
+relationship between features and outcomes
+ * Despite their complexity, these can be applied easily to real-world problems
+ 
+### Understanding Neural Networks
+An Artificial Neural Network (ANN) models the relationship between a set of input
+signals and an output signal using a model derived from our understanding of how a
+biological brain responds to stimuli from sensory inputs. Just as a brain uses a network
+of interconnected cells called neurons to create a massive parallel processor, ANN uses a
+network of artificial neurons or nodes to solve learning problems.
+
+Rudimentary ANNs have been used for over 50 years to simulate the brain's approach
+to problem-solving. At first, this involved learning simple functions like the logical
+AND function or the logical OR function. These early exercises were used primarily to
+help scientists understand how biological brains might operate. However, as computers
+have become increasingly powerful in the recent years, the complexity of ANNs has
+likewise increased so much that they are now frequently applied to more practical
+problems including:
+
+* Speech and handwriting recognition programs like those used by voicemail
+transcription services and postal mail sorting machines
+* The automation of smart devices like an office building's environmental controls
+or self-driving cars and self-piloting drones
+* Sophisticated models of weather and climate patterns, tensile strength, fluid
+dynamics, and many other scientific, social, or economic phenomena
+
+ANNs are best applied to problems where the input data and output data are
+well-defined or at least fairly simple, yet the process that relates the input to
+output is extremely complex. As a black box method, they work well for these
+types of black box problems.
+
+### From biological to artificial neurons
+
+Because ANNs were intentionally designed as conceptual models of human
+brain activity, it is helpful to first understand how biological neurons function.
+As illustrated in the following figure, incoming signals are received by the cell's
+**dendrites** through a biochemical process. The process allows the impulse to be
+weighted according to its relative importance or frequency. As the **cell body** begins
+accumulating the incoming signals, a threshold is reached at which the cell fires and
+the output signal is transmitted via an electrochemical process down the axon. At
+the **axon**'s terminals, the electric signal is again processed as a chemical signal to be
+passed to the neighboring neurons across a tiny gap known as a **synapse**.
+
+
+
+<center> ![](NN1.PNG) </center>
+
+
+The input signals are summed by the cell
+body and the signal is passed on according to an activation function denoted by f:
+
+
+<center> ![](NN2.PNG) </center>
+
+Neural networks use neurons defined this way as building blocks to construct
+complex models of data. Although there are numerous variants of neural networks,
+each can be defined in terms of the following characteristics:
+
+* An **activation function**, which transforms a neuron's combined input signals
+into a single output signal to be broadcasted further in the network
+* A network topology (or architecture), which describes the number of
+neurons in the model as well as the number of layers and manner in which
+they are connected
+* The training algorithm that specifies how connection weights are set in order
+to inhibit or excite neurons in proportion to the input signal
+Let's take a look at some of the variations within each of these categories to see how
+they can be used to construct typical neural network models.
+
+### Activation functions
+
+The activation function is the mechanism by which the artificial neuron processes
+incoming information and passes it throughout the network. Just as the artificial
+neuron is modeled after the biological version, so is the activation function modeled
+after nature's design.
+Sigmoid is perhaps the most commonly used activation function and is
+often used by default, some neural network algorithms allow a choice of alternatives.
+A selection of such activation functions is shown in the following figure:
+
+<center> ![](NN3.PNG) </center>
+
+The primary detail that differentiates these activation functions is the output signal
+range. Typically, this is one of (0, 1), (-1, +1), or (-inf, +inf). The choice of activation
+function biases the neural network such that it may fit certain types of data more
+appropriately, allowing the construction of specialized neural networks.
+It's important to recognize that for many of the activation functions, the range of input
+values that affect the output signal is relatively narrow.
+The solution to the squashing problem is to transform all neural network inputs such
+that the features' values fall within a small range around 0. Typically, this involves
+standardizing or normalizing the features.
+
+### Network topology
+
+
+The ability of a neural network to learn is rooted in its topology, or the patterns and
+structures of interconnected neurons. Although there are countless forms of network
+architecture, they can be differentiated by three key characteristics:
+
+* The number of layers
+* Whether information in the network is allowed to travel backward
+* The number of nodes within each layer of the network
+
+The topology determines the complexity of tasks that can be learned by the network. 
+
+### The number of layers
+
+The figure that follows illustrates the topology of a very simple network. A set of neurons called input nodes receives unprocessed signals directly from the input data. Each input node is responsible for processing a single feature in the dataset; the feature's value will be transformed by the corresponding node's activation function. The signals sent by the input nodes are received by the output node, which uses its own activation function to generate a
+final prediction (denoted here as p).
+The **input** and **output** nodes are arranged in groups known as **layers.** Because the
+input nodes process the incoming data exactly as it is received, the network has
+only one set of connection weights (*labeled here as w1, w2, and w3*). It is therefore
+termed a single-layer network. Single-layer networks can be used for basic
+pattern classification, particularly for patterns that are linearly separable, but
+more sophisticated networks are required for most learning tasks.
+
+
+* **Single-layer network**  
+
+<left> ![](NN4.PNG) </left>
+
+* **Multilayer network** 
+
+<left> ![](NN5.PNG) </left>
+
+
+### The direction of information travel
+
+Networks in which the input signal is fed
+continuously in one direction from connection to connection until it reaches the
+output layer are called feedforward networks.
+A neural network with multiple hidden layers is
+called a **Deep Neural Network** (DNN) and the practice of training such network is
+sometimes referred to as **deep learning**.
+
+<center> ![](NN6.PNG) </center>
+
+
+In contrast, a recurrent network (or feedback network) allows signals to travel
+in both directions using loops. This property, which more closely mirrors how a
+biological neural network works, allows extremely complex patterns to be learned.
+The addition of a short-term memory, or delay, increases the power of recurrent
+networks immensely.
+In fact, the multilayer feedforward
+network, sometimes called the Multilayer Perceptron (MLP), is the de facto standard
+ANN topology. If someone mentions that they are fitting a neural network, they are
+most likely referring to a MLP.
+
+<left> ![](NN7.PNG) </left>  **=>**  simple recurrent
+network 
+
+
+### The number of nodes in each layer 
+
+The number of input nodes is predetermined by the number of features in the
+input data and the number of hidden nodes is left to the user to decide prior to training the model.
+
+The appropriate number depends on the number of input nodes,
+the amount of training data, the amount of noisy data, and the complexity of the
+learning task, among many other factors.
+
+### Training neural networks with backpropagation
+
+The
+network's connection weights are adjusted to reflect the patterns observed over time.
+Training a neural network by adjusting connection weights is very computationally
+intensive. Consequently, though they had been studied for decades prior, ANNs
+were rarely applied to real-world learning tasks until the mid-to-late 1980s, when an
+efficient method of training an ANN was discovered. The algorithm, which used a
+strategy of back-propagating errors, is now known simply as **backpropagation.**
+
+
+As a result,
+multilayer feedforward networks that use the backpropagation algorithm are now
+common in the field of data mining. Such models offer the following strengths
+and weaknesses:
+
+
+
+<table>
+  <tr>
+    <th>Strengths</th>
+    <th>Weaknesses</th>
+  </tr>
+  <tr>
+    <td>* Can be adapted to classification or
+numeric prediction problems</td>
+    <td>* Extremely computationally
+intensive and slow to train,
+particularly if the network topology
+is complex</td>
+  </tr>
+  <tr>
+    <td>* Capable of modeling more complex
+patterns than nearly any algorithm</td>
+    <td>* Very prone to overfitting training
+data</td>
+  </tr>
+  <tr>
+    <td>* Makes few assumptions about the
+data's underlying relationships</td>
+    <td>* Results in a complex black box
+model that is difficult, if not
+impossible, to interpret</td>
+  </tr>
+  
+</table>
+
+
+In its most general form, the backpropagation algorithm iterates through many
+cycles of two processes. Each cycle is known as an **epoch.**
+Each epoch in the backpropagation algorithm includes:
+
+* A **forward** phase in which the neurons are activated in sequence from
+the input layer to the output layer, applying each neuron's weights and
+activation function along the way. Upon reaching the final layer, an output
+signal is produced.
+* A **backward** phase in which the network's output signal resulting from the
+forward phase is compared to the true target value in the training data. The
+difference between the network's output signal and the true value results
+in an error that is propagated backwards in the network to modify the
+connection weights between neurons and reduce future errors.
+
+Yet one question remains: because the relationship between each
+neuron's inputs and outputs is complex, how does the algorithm determine how
+much a weight should be changed? The answer to this question involves a technique
+called **gradient descent**. 
+
+The algorithm will attempt to change the weights that
+result in the greatest reduction in error by an amount known as the **learning rate**. The
+greater the learning rate, the faster the algorithm will attempt to descend down the
+gradients, which could reduce the training time at the risk of overshooting the valley.
+
+### Example - ANN 
+For this analysis, we will utilize data on the compressive strength of concrete donated
+to the UCI Machine Learning Data Repository (http://archive.ics.uci.edu/ml) 
+
+---
+
+#### **1.** __Collecting, exploring and preparing the data__
+
+```{r}
+
+concrete <- read.csv("concrete.csv")
+str(concrete)
+
+```
+
+We make a function to **normalize** our data. 
+And we apply to our dataframe.
+
+```{r}
+normalize <- function(x) {
+ return((x - min(x)) / (max(x) - min(x)))
+ }
+
+concrete_norm <- as.data.frame(lapply(concrete, normalize))
+
+```
+We will partition the data into
+a training set with 75 percent of the examples and a testing set with 25 percent
+```{r}
+concrete_train <- concrete_norm[1:773, ]
+concrete_test <- concrete_norm[774:1030, ]
+
+```
+
+We'll use the training dataset to build the neural network and the testing dataset to
+evaluate how well the model generalizes to future results. As it is easy to overfit a
+neural network, this step is very important.
+
+#### **2.** __Training a model on the data__
+
+```{r}
+library(neuralnet)
+
+RNGversion("3.5.2")
+set.seed(12345)
+concrete_model <- neuralnet(formula = strength ~ cement + slag +
+                              ash + water + superplastic +
+                              coarseagg + fineagg + age,
+                              data = concrete_train)
+
+plot(concrete_model)
+
+
+```
+<left> ![](SVM9.png) </left>
+
+#### **3.** __Evaluating model performance__
+
+```{r}
+model_results <- compute(concrete_model, concrete_test[1:8])
+#obtain predicted strength values
+predicted_strength <- model_results$net.result
+#examine the correlation between predicted and actual values -->
+cor(predicted_strength, concrete_test$strength)
+```
+
+#### **4.** __Improving model performance__
+a more complex neural network topology with 5 hidden neurons
+```{r}
+RNGversion("3.5.2") # use an older random number generator to match the book
+set.seed(12345) # to guarantee repeatable results
+concrete_model2 <- neuralnet(strength ~ cement + slag +
+                               ash + water + superplastic + 
+                               coarseagg + fineagg + age,
+                               data = concrete_train, hidden = 5)
+
+# plot the network
+plot(concrete_model2)
+```
+
+#### **5.** __Evaluate the results as we did before__
+
+```{r}
+model_results2 <- compute(concrete_model2, concrete_test[1:8])
+predicted_strength2 <- model_results2$net.result
+cor(predicted_strength2, concrete_test$strength)
+```
+
+## Understanding Support Vector Machines
+
+A Support Vector Machine (SVM) can be imagined as a surface that creates
+a boundary between points of data plotted in multidimensional that represent
+examples and their feature values. The goal of a SVM is to create a flat boundary
+called a hyperplane, which divides the space to create fairly homogeneous
+partitions on either side.
+The combination is
+extremely powerful, allowing SVMs to model highly complex relationships.
+
+SVMs can be adapted for use with nearly any type of learning task, including both
+classification and numeric prediction. Many of the algorithm's key successes have
+come in pattern recognition. Notable applications include:
+
+* Classification of microarray gene expression data in the field of
+bioinformatics to identify cancer or other genetic diseases
+* Text categorization such as identification of the language used in a document
+or the classification of documents by subject matter
+* The detection of rare yet important events like combustion engine failure,
+security breaches, or earthquakes
+
+
+### Classification with hyperplanes
+
+ SVMs use a boundary called a hyperplane to partition data into
+groups of similar class values
+For example, the following figure depicts hyperplanes
+that separate groups of circles and squares in two and three dimensions. Because the
+circles and squares can be separated perfectly by the straight line or flat surface, they
+are said to be **linearly separable**.
+
+
+<left> ![](SVM1.PNG) </left>
+
+
+In two dimensions, the task of the SVM algorithm is to identify a line that separates
+the two classes. As shown in the following figure, there is more than one choice of
+dividing line between the groups of circles and squares.
+
+**Maximum Margin Hyperplane**
+(MMH) that creates the greatest separation between the two classes. Although any of
+the three lines separating the circles and squares would correctly classify all the data
+points, it is likely that the line that leads to the greatest separation will generalize the
+best to the future data.
+
+The support vectors (indicated by arrows in the figure that follows) are the points
+from each class that are the closest to the MMH; each class must have at least one
+support vector, but it is possible to have more than one. Using the support vectors
+alone, it is possible to define the MMH. _This is a key feature of SVMs_;
+
+<left> ![](SVM2.PNG) </left>
+
+### The case of linearly separable data
+
+It is easiest to understand how to find the maximum margin under the assumption
+that the classes are linearly separable. In this case, the MMH is as far away as
+possible from the outer boundaries of the two groups of data points. These outer
+boundaries are known as the **convex hull**.
+ *Sophisticated computer*
+algorithms that use a technique known as quadratic optimization are capable of
+finding the maximum margin in this way.
+
+<left> ![](SVM3.PNG) </left>
+
+### The case of nonlinearly separable data
+
+ The
+solution to this problem is the use of a slack variable, which creates a soft margin
+that allows some points to fall on the incorrect side of the margin. The figure
+that follows illustrates two points falling on the wrong side of the line with the
+corresponding slack terms (denoted with the Greek letter Xi)
+
+<left> ![](SVM4.PNG) </left>
+
+### Using kernels for non-linear spaces
+
+A key feature of SVMs
+is their ability to map the problem into a higher dimension space using a process
+known as the **kernel trick**. In doing so, a nonlinear relationship may suddenly
+appear to be quite linear.
+
+
+SVMs with nonlinear kernels are extremely powerful classifiers, although they do
+have some downsides, as shown in the following table:
+
+
+<table>
+  <tr>
+    <th>Strengths</th>
+    <th>Weaknesses</th>
+  </tr>
+  </tr>
+  <tr>
+    <td>* Not overly influenced by noisy data
+and not very prone to overfitting</td>
+    <td>* Can be slow to train, particularly if
+the input dataset has a large number
+of features or examples</td>
+  </tr>
+  <tr>
+    <td>* May be easier to use than neural
+networks, particularly due to the
+existence of several well-supported
+SVM algorithms</td>
+    <td>* Results in a complex black box model
+that is difficult, if not impossible, to
+interpret</td>
+  </tr>
+  
+</table>
+
+
+
+Nearly all SVM software packages will include these kernels, among many others.
+
+ * Linear kernel 
+ <left> ![](SVM5.PNG) </left>
+ * Polynomial kernel
+ <left> ![](SVM6.PNG) </left>
+ * Sigmoid kernel
+  <left> ![](SVM7.PNG) </left>
+  * Gaussian RBF kernel
+  <left> ![](SVM8.PNG) </left>
+ 
+### Example - SVM 
+For this analysis, we will utilize data on the compressive strength of concrete donated
+to the UCI Machine Learning Data Repository (http://archive.ics.uci.edu/ml) 
+The
+dataset contains 20,000 examples of 26 English alphabet capital letters as printed
+using 20 different randomly reshaped and distorted black and white fonts.
+
+
+
+#### **1.** __Collecting, exploring and preparing the data__
+
+```{r} 
+letters <- read.csv("letter.csv")
+str(letters)
+
+```
+
+Getting our data ready 
+
+```{r} 
+letters_train <- letters[1:16000, ]
+letters_test <- letters[16001:20000, ]
+
+```
+
+#### **2.** __Training a model on the data__
+
+```{r} 
+library(kernlab)
+letter_classifier <- ksvm(letter ~ ., data = letters_train,
+                          kernel = "vanilladot")
+```
+
+#### **3.** __Evaluating model performance__
+
+```{r} 
+letter_predictions <- predict(letter_classifier, letters_test)
+head(letter_predictions)
+
+
+
+agreement <- letter_predictions == letters_test$letter
+table(agreement)
+prop.table(table(agreement))
+```
+
+#### **4.** __Improving model performance__
+
+We are going to use RBF Kernel
+
+```{r} 
+RNGversion("3.5.2") # use an older random number generator to match the book
+set.seed(12345)
+letter_classifier_rbf <- ksvm(letter ~ ., data = letters_train, kernel = "rbfdot")
+letter_predictions_rbf <- predict(letter_classifier_rbf, letters_test)
+
+agreement_rbf <- letter_predictions_rbf == letters_test$letter
+table(agreement_rbf)
+prop.table(table(agreement_rbf))
+```
+
+In this chapter, we examined two machine learning methods that offer a great deal of
+potential, but are often overlooked due to their complexity. Hopefully, you now see
+that this reputation is at least somewhat undeserved. The basic concepts that drive
+ANNs and SVMs are fairly easy to understand.
+On the other hand, because ANNs and SVMs have been around for many decades,
+each of them has numerous variations. This chapter just scratches the surface of
+what is possible with these methods. By utilizing the terminology you learned
+here, you should be capable of picking up the nuances that distinguish the many
+advancements that are being developed every day.
